@@ -11,8 +11,8 @@ import java.util.Scanner;
 public class TicTacToe {
     /* Vars definition section */
     private static char[][] map;    // game field
-    private static int SIZE = 3;     // field size
-    private static boolean SILLY_MODE = true;     // field size
+    private static final int SIZE = 3;     // field size
+    private static boolean SILLY_MODE = false;     // field size
 
     private static final char DOT_EMPTY = '*';  // empty cell
     private static final char DOT_X = 'X';      // X cell
@@ -31,6 +31,7 @@ public class TicTacToe {
 			if(isEndGame(DOT_X)){
 				break;
 			}
+
 			computerTurn();// computer's turn
 
             if(isEndGame(DOT_O)){
@@ -69,7 +70,7 @@ public class TicTacToe {
     private static void humanTurn() {
         int x, y;
         do {
-            System.out.println("Введите координаты ячейки (X Y)");
+            System.out.println("Введите координаты ячейки (Y - строка; X - столбец )");
             y = scanner.nextInt() - 1; // Считывание номера строки
             x = scanner.nextInt() - 1; // Считывание номера столбца
         }
@@ -79,12 +80,15 @@ public class TicTacToe {
     }
     /*
      * Метод, реализующий проверку корректности ввода координат
+     * y - строка
+     * x - столбец
      * */
     private static boolean isCellValid(int x, int y){
         boolean result = true;
 
         if(x < 0 || x >= SIZE || y < 0 || y >= SIZE) { // invalid - out of map
             result = false;
+            return result;
         }
 
         if(map[y][x] != DOT_EMPTY){ // cell is already busy
@@ -93,9 +97,39 @@ public class TicTacToe {
 
         return result;
     }
+    private static boolean isCellInRange(int x, int y){
+        boolean result = true;
+
+        if(x < 0 || x >= SIZE || y < 0 || y >= SIZE) { // invalid - out of map
+            result = false;
+            return result;
+        }
+        return result;
+    }
     private static boolean checkWin(char playerSymbol) {
         boolean result = false;
 
+        if(checkDiagonals(playerSymbol)||checkLines(playerSymbol)){
+            result = true;
+        }
+        return result;
+    }
+    private static boolean checkDiagonals(char playerSymbol) {
+        boolean result = false;
+        boolean leftRight, rightLeft;
+        leftRight = true;
+        rightLeft = true;
+
+        for(int i=0; i<SIZE; i++)
+        {
+            leftRight &= (map[i][i] == playerSymbol);
+            rightLeft &= (map[SIZE-i-1][i] == playerSymbol);
+        }
+
+        if(leftRight||rightLeft){
+            result = true;
+        }
+        /*
         if(
                 (map[0][0] == playerSymbol && map[0][1] == playerSymbol && map[0][2] == playerSymbol) ||
                         (map[1][0] == playerSymbol && map[1][1] == playerSymbol && map[1][2] == playerSymbol) ||
@@ -105,6 +139,30 @@ public class TicTacToe {
                         (map[0][2] == playerSymbol && map[1][2] == playerSymbol && map[2][2] == playerSymbol) ||
                         (map[0][0] == playerSymbol && map[1][1] == playerSymbol && map[2][2] == playerSymbol) ||
                         (map[2][0] == playerSymbol && map[1][1] == playerSymbol && map[0][2] == playerSymbol)){
+            result = true;
+        }*/
+
+        return result;
+    }
+    private static boolean checkLines(char playerSymbol) {
+        boolean result = false;
+        boolean cols, rows;
+        cols = false;
+        rows = false;
+
+
+        for(int col=0; col<SIZE; col++)
+        {
+            cols = true;
+            rows = true;
+            for(int row=0; row<SIZE; row++)
+            {
+               cols &= (map[col][row] == playerSymbol);
+               rows &= (map[row][col] == playerSymbol);
+            }
+        }
+
+        if(cols||rows){
             result = true;
         }
 
@@ -116,6 +174,9 @@ public class TicTacToe {
     private static void computerTurn(){
         int x = -1;
         int y = -1;
+        int cur_weight = 0, max_weight = 0;
+        int x_max=-1;
+        int y_max=-1;
 
         if(SILLY_MODE){
             do {
@@ -123,22 +184,48 @@ public class TicTacToe {
                 y = random.nextInt(SIZE);// случайным образом получаем координату Х и проверяем ее на незанятость
             } while(!isCellValid(x, y));
         }
-        else{
+        else{// SMART MODE
             for(int i = 0; i < SIZE; i++){
                 for(int j = 0; j < SIZE; j++){
-                    // Проверяем клетки по направлениям
+                    // Проверяем клетки по весу каждой из них
+                    cur_weight = CalcWeight( j, i, DOT_O);// рассчитываем вес
+                    if (cur_weight > max_weight) // сравниваем с максимальным найденным весом
+                    {
+                        max_weight = cur_weight;// новый максимальный вес
+                        x_max = j;              // фиксируем координаты ячейки с максимальным весом
+                        y_max = i;
+                    }
+                    System.out.println("Вес ячейки " + (i + 1) + " " + (j + 1) + " " + "равен" + " " + (cur_weight));
                 }
             }
+            if ((x_max >= 0)&& (y_max >= 0)){// нашли ячейку с максимальным весом
+                x = x_max;
+                y = y_max;
+                System.out.println("Координаты ячейки " + (x_max+1) + " " + (y_max + 1) + " " + "равен" + " " + (cur_weight));
+            }else{// иначе выбираем любую свободную ячейку
+                if(isCellValid(1, 1)){/*Проверяем - занята ли центральная ячейка (она попадает в большее число пересечений)*/
+                    x = 1;
+                    y = 1;
+                }
+                else {//выбираем произвольную ячейку
+                    do {
+                        x = random.nextInt(SIZE);// случайным образом получаем координату Х и проверяем ее на незанятость
+                        y = random.nextInt(SIZE);// случайным образом получаем координату Х и проверяем ее на незанятость
+                    } while (!isCellValid(x, y));
+                }
+            }
+
+
         }
 
         System.out.println("Компьютер выбрал ячейку " + (y + 1) + " " + (x + 1));
         map[y][x] = DOT_O;
     }
     /*
-    *
+    *Метод, реализующий проверку игры на окончание - победа или ничья
     * */
     private static boolean isEndGame(char playerSymbol) {
-        boolean result = true;
+        boolean result = false;
 
         PrintMap();
 
@@ -151,6 +238,7 @@ public class TicTacToe {
             System.out.println("НИЧЬЯ!");
             result = true;
         }
+
         return result;
     }
 
@@ -164,17 +252,68 @@ public class TicTacToe {
                     break;
                 }
             }
-            if(result == false) // чтобы не крутить цикл дишний раз проверяем - была ли найдена свободная ячейка
+            if(!result) // чтобы не крутить цикл дишний раз проверяем - была ли найдена свободная ячейка
             {break;}
         }
 
         return result;
 
     }
-
-
-
-
-
-
+    private static int CalcWeight(int x, int y, char playerSymbol) {
+        int weight = 0;
+        int cur_x, cur_y;
+        cur_x = x;
+        cur_y = y;
+        if (isCellValid(cur_x,cur_y)) {/*клетка не занята - проверяем ее окружение*/
+            cur_x = x-1;
+            cur_y = y-1;
+            if (isCellInRange(cur_x,cur_y))
+                if (map[cur_y][cur_x] == playerSymbol){
+                    weight++;
+                }
+            cur_x = x;
+            cur_y = y-1;
+            if (isCellInRange(cur_x,cur_y))
+                if (map[cur_y][cur_x] == playerSymbol){
+                    weight++;
+                }
+            cur_x = x+1;
+            cur_y = y-1;
+            if (isCellInRange(cur_x,cur_y))
+                if (map[cur_y][cur_x] == playerSymbol){
+                    weight++;
+                }
+            cur_x = x-1;
+            cur_y = y;
+            if (isCellInRange(cur_x,cur_y))
+                if (map[cur_y][cur_x] == playerSymbol){
+                    weight++;
+                }
+            cur_x = x+1;
+            cur_y = y;
+            if (isCellInRange(cur_x,cur_y))
+                if (map[cur_y][cur_x] == playerSymbol){
+                    weight++;
+                }
+            cur_x = x-1;
+            cur_y = y+1;
+            if (isCellInRange(cur_x,cur_y))
+                if (map[cur_y][cur_x] == playerSymbol){
+                    weight++;
+                }
+            cur_x = x;
+            cur_y = y+1;
+            if (isCellInRange(cur_x,cur_y))
+                if (map[cur_y][cur_x] == playerSymbol){
+                    weight++;
+                }
+            cur_x = x+1;
+            cur_y = y+1;
+            if (isCellInRange(cur_x,cur_y))
+                if (map[cur_y][cur_x] == playerSymbol){
+                    weight++;
+                }
+        }
+        return weight;
+    }
 }
