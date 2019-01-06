@@ -1,4 +1,4 @@
-package Lesson4;
+package moscow.pts.lesson4;
 
 public class EmployeeTest {
     public static void main(String[] args) {
@@ -13,12 +13,12 @@ public class EmployeeTest {
         persArray[4] = new Person(...);
         С помощью цикла вывести информацию только о сотрудниках старше 40 лет;
     * */
-        cEmployee[] employeeArray = new cEmployee[5];
-        employeeArray[0] = new cEmployee( "George Washington", "President", "gw@somemail.com","+1123-456-7890", 100000, 229);
-        employeeArray[1] = new cEmployee( "Mike Pence", "Vice President", "mp@somemail.com","+1123-456-7891", 50000, 59);
-        employeeArray[2] = new cEmployee( "Mike Pompeo", "Secretary of State", "mpeo@somemail.com","+1123-456-7892", 51000, 55);
-        employeeArray[3] = new cEmployee( "James Mattis", "Secretary of Defense", "jm@somemail.com","+1123-456-7893", 61000, 68);
-        employeeArray[4] = new cEmployee( "Steven Mnuchin", "Secretary of the Treasury", "sm@somemail.com","+1123-456-7894", 61000, 68);
+        Employee[] employeeArray = new Employee[5];
+        employeeArray[0] = new Employee( "George Washington", "President", "gw@somemail.com","+1123-456-7890", 100000, 229);
+        employeeArray[1] = new Employee( "Mike Pence", "Vice President", "mp@somemail.com","+1123-456-7891", 50000, 59);
+        employeeArray[2] = new Employee( "Mike Pompeo", "Secretary of State", "mpeo@somemail.com","+1123-456-7892", 51000, 55);
+        employeeArray[3] = new Employee( "James Mattis", "Secretary of Defense", "jm@somemail.com","+1123-456-7893", 61000, 68);
+        employeeArray[4] = new Employee( "Steven Mnuchin", "Secretary of the Treasury", "sm@somemail.com","+1123-456-7894", 61000, 68);
 
         for (int i=0; i<employeeArray.length;i++){
             if(employeeArray[i].Age >= 40){

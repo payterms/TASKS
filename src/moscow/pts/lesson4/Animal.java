@@ -1,4 +1,4 @@
-package Lesson4;
+package moscow.pts.lesson4;
 
 /*5. Создать классы Собака и Кот с наследованием от класса Животное;
         6. Животные могут выполнять действия: бежать, плыть, перепрыгивать препятствие. В качестве параметра каждому методу передается величина, означающая или длину препятствия (для бега и плавания), или высоту (для прыжков);
@@ -6,16 +6,24 @@ package Lesson4;
         8. При попытке животного выполнить одно из этих действий, оно должно сообщить результат в консоль. (Например, dog1.run(150); -> результат: run: true);
         9. * Добавить животным разброс в ограничениях. То есть у одной собаки ограничение на бег может быть 400 м., у другой – 600 м.*/
 
-public class cAnimal {
+abstract class Animal {
+    public String name;
     protected float maxRunDistance;
     protected float maxSwimDistance;
     protected float maxJumpDistance;
-    protected String name;
-    public cAnimal() {
+
+    public Animal() {
     }
-    public cAnimal(String _name) {
+
+    public Animal(String _name) {
         this.name = _name;
     }
+
+    abstract boolean run(float _distance);
+
+    abstract boolean swim(float _distance);
+
+    abstract boolean jump(float _distance);
 }
 
 

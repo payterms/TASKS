@@ -1,4 +1,4 @@
-package Lesson4;
+package moscow.pts.lesson4;
 
 import java.util.Random;
 
@@ -8,10 +8,10 @@ public class AnimalTest {
     public static void main(String[] args) {
 
         /*Разные виды кошек*/
-        cCat[] catArray = new cCat[3];
-        catArray[0] = new cCat(); // простая кошка без фантазии
-        catArray[1] = new cCat("Lynx", 12000, 0, 4); // Рысь
-        catArray[2] = new cCat("Panther", 35000, 0, 6); // Пантера
+        Cat[] catArray = new Cat[3];
+        catArray[0] = new Cat(); // простая кошка без фантазии
+        catArray[1] = new Cat("Lynx", 12000, 0, 4); // Рысь
+        catArray[2] = new Cat("Panther", 35000, 0, 6); // Пантера
         for (int i=0;i<catArray.length;i++){
             int curDistance = random.nextInt(20);
             System.out.println("Current Distance: "+ curDistance);
@@ -25,10 +25,10 @@ public class AnimalTest {
         }
 
         /*Разные виды собак*/
-        cDog[] dogArray = new cDog[3];
-        dogArray[0] = new cDog(); // простая собака без фантазии
-        dogArray[1] = new cDog("Bernese mountain dog", 17000, 150, 2); // Дог
-        dogArray[2] = new cDog("West Highland white terrier", 3000, 15, 0.5f); // Терьер
+        Dog[] dogArray = new Dog[3];
+        dogArray[0] = new Dog(); // простая собака без фантазии
+        dogArray[1] = new Dog("Bernese mountain Dog", 17000, 150, 2); // Дог
+        dogArray[2] = new Dog("West Highland white terrier", 3000, 15, 0.5f); // Терьер
         for (int i=0;i<catArray.length;i++){
             int curDistance = random.nextInt(20);
             System.out.println("Current Distance: "+ curDistance);
